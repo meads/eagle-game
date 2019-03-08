@@ -1,70 +1,99 @@
 (function(exports) {
-    "use strict"; 
+    "use strict" 
+    var app
+    var far    
+    var mid
+    var fore
+    var eagleDirection = {up:false, down:false}
+    var eagleFlyingRight
+    const appHeight = 384
 
-    var far;    
-    var mid;
-    var fore;
-    var eagleFlyingRight;
-
-    var stage;
-    var renderer;
+    var stage
+    var renderer
 
     function init() {
-        stage = new PIXI.Container()
-
-        let gameCanvas = document.getElementById("game-canvas")
+        var gameCanvas = document.getElementById("game-canvas")
+        console.log(gameCanvas)
         gameCanvas.width = window.innerWidth
         gameCanvas.height = window.innerHeight
+        app = new PIXI.Application(window.innerWidth, appHeight, {view:gameCanvas})
+        document.body.appendChild(app.view)
+        app.stage = new PIXI.Container()
 
         PIXI.loader.add("resources/eagledata.json").load(function() {
-            renderer = PIXI.autoDetectRenderer(
-                window.innerWidth,
-                384,
-                {view:gameCanvas}
-            )
-            
+
+            renderer = PIXI.autoDetectRenderer(window.innerWidth, appHeight, {view:gameCanvas})
+
             var farTexture = PIXI.Texture.fromImage("resources/country-platform-back.png")
-            far = new PIXI.extras.TilingSprite(farTexture, window.innerWidth, 384)
+            far = new PIXI.extras.TilingSprite(farTexture, window.innerWidth, appHeight)
             far.position.x = 0
             far.position.y = 0
+            
             far.tilePosition.x = 0
             far.tilePosition.y = 0
-            stage.addChild(far)
-    
+            app.stage.addChild(far)
+            
             var midTexture = PIXI.Texture.fromImage("resources/country-platform-forest.png")
-            mid = new PIXI.extras.TilingSprite(midTexture, window.innerWidth, 384)
+            mid = new PIXI.extras.TilingSprite(midTexture, window.innerWidth, appHeight)
             mid.position.x = 0
             mid.position.y = 128
             mid.tilePosition.x = 0
             mid.tilePosition.y = 0
-            stage.addChild(mid)
+            app.stage.addChild(mid)
     
             var foreTexture = PIXI.Texture.fromImage("resources/country-platform-tiles-example.png")
-            fore = new PIXI.extras.TilingSprite(foreTexture, window.innerWidth, 384)
+            fore = new PIXI.extras.TilingSprite(foreTexture, window.innerWidth, appHeight)
             fore.position.x = 0
             fore.position.y = 160
             fore.tilePosition.x = 0
             fore.tilePosition.y = 0
-            stage.addChild(fore)
+            app.stage.addChild(fore)
     
-            let sheet = PIXI.loader.resources["resources/eagledata.json"]
-            
-            eagleFlyingRight = new PIXI.Sprite(sheet.textures["flyright_00.png"])
-            stage.addChild(eagleFlyingRight)
+            var frames = []
 
-            requestAnimationFrame(update)
+            for (var i = 0; i < 3; i++) {
+                frames.push(PIXI.Texture.fromFrame('flyright_0' + i + '.png'))
+            }
+
+            var anim = new PIXI.extras.AnimatedSprite(frames)
+            anim.x = app.screen.width / 2
+            anim.y = app.screen.height / 2
+            anim.anchor.set(0.5)
+            anim.animationSpeed = 0.5
+            anim.play()
+
+            app.stage.addChild(anim)
+
+            let arrowUp = keyboard("ArrowUp")
+            arrowUp.press = () => eagleDirection.up = true
+            arrowUp.release = () => eagleDirection.up = false
+
+            let arrowDown = keyboard("ArrowDown")
+            arrowDown.press = () => eagleDirection.down = true
+            arrowDown.release = () => eagleDirection.down = false            
+
+            app.ticker.add(function() {
+                if (eagleDirection.up) {
+                    if (anim.position.y <= 16) {
+                        anim.position.y = 16
+                    } else {
+                        anim.position.y -= 5
+                    }
+                }
+                if (eagleDirection.down) {
+                    if(anim.position.y >= (appHeight-40)) {
+                        anim.position.y = appHeight-40
+                    } else {
+                        anim.position.y += 5
+                    }
+                }
+                far.tilePosition.x -= 0.128
+                mid.tilePosition.x -= 0.64
+                fore.tilePosition.x -= 2.64
+            })
         })
     }
-
-    function update() {
-        far.tilePosition.x -= 0.128
-        mid.tilePosition.x -= 0.64
-        fore.tilePosition.x -= 2.64
     
-        renderer.render(stage)
-    
-        requestAnimationFrame(update)
-    }
+    window.onload = init
 
-    window.onload = init;
-}(window));
+}(window))

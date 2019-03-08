@@ -4,6 +4,7 @@
     var far;    
     var mid;
     var fore;
+    var eagleFlyingRight;
 
     var stage;
     var renderer;
@@ -22,10 +23,6 @@
                 {view:gameCanvas}
             )
             
-            let sheet = PIXI.loader.resources["resources/eagledata.json"]
-            console.log(sheet)
-            
-
             var farTexture = PIXI.Texture.fromImage("resources/country-platform-back.png")
             far = new PIXI.extras.TilingSprite(farTexture, window.innerWidth, 384)
             far.position.x = 0
@@ -50,6 +47,11 @@
             fore.tilePosition.y = 0
             stage.addChild(fore)
     
+            let sheet = PIXI.loader.resources["resources/eagledata.json"]
+            
+            eagleFlyingRight = new PIXI.Sprite(sheet.textures["flyright_00.png"])
+            stage.addChild(eagleFlyingRight)
+
             requestAnimationFrame(update)
         })
     }

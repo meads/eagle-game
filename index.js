@@ -15,37 +15,43 @@
         gameCanvas.width = window.innerWidth
         gameCanvas.height = window.innerHeight
 
-        renderer = PIXI.autoDetectRenderer(
-            window.innerWidth,
-            384,
-            {view:gameCanvas}
-        );
-        
-        var farTexture = PIXI.Texture.fromImage("resources/country-platform-back.png")
-        far = new PIXI.extras.TilingSprite(farTexture, window.innerWidth, 384)
-        far.position.x = 0
-        far.position.y = 0
-        far.tilePosition.x = 0
-        far.tilePosition.y = 0
-        stage.addChild(far)
+        PIXI.loader.add("resources/eagledata.json").load(function() {
+            renderer = PIXI.autoDetectRenderer(
+                window.innerWidth,
+                384,
+                {view:gameCanvas}
+            )
+            
+            let sheet = PIXI.loader.resources["resources/eagledata.json"]
+            console.log(sheet)
+            
 
-        var midTexture = PIXI.Texture.fromImage("resources/country-platform-forest.png")
-        mid = new PIXI.extras.TilingSprite(midTexture, window.innerWidth, 384)
-        mid.position.x = 0
-        mid.position.y = 128
-        mid.tilePosition.x = 0
-        mid.tilePosition.y = 0
-        stage.addChild(mid)
-
-        var foreTexture = PIXI.Texture.fromImage("resources/country-platform-tiles-example.png")
-        fore = new PIXI.extras.TilingSprite(foreTexture, window.innerWidth, 384)
-        fore.position.x = 0
-        fore.position.y = 160
-        fore.tilePosition.x = 0
-        fore.tilePosition.y = 0
-        stage.addChild(fore)
-
-        requestAnimationFrame(update)
+            var farTexture = PIXI.Texture.fromImage("resources/country-platform-back.png")
+            far = new PIXI.extras.TilingSprite(farTexture, window.innerWidth, 384)
+            far.position.x = 0
+            far.position.y = 0
+            far.tilePosition.x = 0
+            far.tilePosition.y = 0
+            stage.addChild(far)
+    
+            var midTexture = PIXI.Texture.fromImage("resources/country-platform-forest.png")
+            mid = new PIXI.extras.TilingSprite(midTexture, window.innerWidth, 384)
+            mid.position.x = 0
+            mid.position.y = 128
+            mid.tilePosition.x = 0
+            mid.tilePosition.y = 0
+            stage.addChild(mid)
+    
+            var foreTexture = PIXI.Texture.fromImage("resources/country-platform-tiles-example.png")
+            fore = new PIXI.extras.TilingSprite(foreTexture, window.innerWidth, 384)
+            fore.position.x = 0
+            fore.position.y = 160
+            fore.tilePosition.x = 0
+            fore.tilePosition.y = 0
+            stage.addChild(fore)
+    
+            requestAnimationFrame(update)
+        })
     }
 
     function update() {

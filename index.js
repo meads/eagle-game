@@ -4,7 +4,12 @@
     var far    
     var mid
     var fore
-    var eagleDirection = {up:false, down:false}
+    var eagleDirection = {
+        up:false, 
+        down:false,
+        left:false,
+        right:false
+    }
     var eagleFlyingRight
     const appHeight = 384
 
@@ -12,6 +17,7 @@
     var renderer
 
     function init() {
+        try { new Audio('resources/bald-eagle.mp3').play() } catch {}
         var gameCanvas = document.getElementById("game-canvas")
         console.log(gameCanvas)
         gameCanvas.width = window.innerWidth
@@ -72,6 +78,14 @@
             arrowDown.press = () => eagleDirection.down = true
             arrowDown.release = () => eagleDirection.down = false            
 
+            let arrowLeft = keyboard("ArrowLeft")
+            arrowLeft.press = () => eagleDirection.left = true
+            arrowLeft.release = () => eagleDirection.left = false            
+
+            let arrowRight = keyboard("ArrowRight")
+            arrowRight.press = () => eagleDirection.right = true
+            arrowRight.release = () => eagleDirection.right = false            
+
             app.ticker.add(function() {
                 if (eagleDirection.up) {
                     if (anim.position.y <= 16) {
@@ -85,6 +99,20 @@
                         anim.position.y = appHeight-40
                     } else {
                         anim.position.y += 5
+                    }
+                }
+                if (eagleDirection.right) {
+                    if (anim.position.x+5 >= window.innerWidth-16) {
+                        anim.position.x = window.innerWidth-16
+                    } else {
+                        anim.position.x  += 5
+                    }
+                } 
+                if (eagleDirection.left) {
+                    if (anim.position.x-5 <= 16) {
+                        anim.position.x = 16
+                    } else {
+                        anim.position.x -= 5
                     }
                 }
                 far.tilePosition.x -= 0.128

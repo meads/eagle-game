@@ -1,5 +1,101 @@
 {"frames": {
 
+"catback_01.png":
+{
+	"frame": {"x":2,"y":218,"w":13,"h":25},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":19,"w":13,"h":25},
+	"sourceSize": {"w":32,"h":48}
+},
+"catback_02.png":
+{
+	"frame": {"x":17,"y":218,"w":13,"h":25},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":18,"w":13,"h":25},
+	"sourceSize": {"w":32,"h":48}
+},
+"catback_03.png":
+{
+	"frame": {"x":32,"y":218,"w":13,"h":25},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":19,"w":13,"h":25},
+	"sourceSize": {"w":32,"h":48}
+},
+"catfwd_01.png":
+{
+	"frame": {"x":47,"y":218,"w":13,"h":25},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":19,"w":13,"h":25},
+	"sourceSize": {"w":32,"h":48}
+},
+"catfwd_02.png":
+{
+	"frame": {"x":77,"y":210,"w":13,"h":23},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":20,"w":13,"h":23},
+	"sourceSize": {"w":32,"h":48}
+},
+"catfwd_03.png":
+{
+	"frame": {"x":62,"y":218,"w":13,"h":25},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":19,"w":13,"h":25},
+	"sourceSize": {"w":32,"h":48}
+},
+"catleft_01.png":
+{
+	"frame": {"x":118,"y":210,"w":24,"h":19},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":24,"w":24,"h":19},
+	"sourceSize": {"w":32,"h":48}
+},
+"catleft_02.png":
+{
+	"frame": {"x":92,"y":210,"w":24,"h":20},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":23,"w":24,"h":20},
+	"sourceSize": {"w":32,"h":48}
+},
+"catleft_03.png":
+{
+	"frame": {"x":144,"y":194,"w":23,"h":19},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":24,"w":23,"h":19},
+	"sourceSize": {"w":32,"h":48}
+},
+"catright_01.png":
+{
+	"frame": {"x":144,"y":215,"w":23,"h":19},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":24,"w":23,"h":19},
+	"sourceSize": {"w":32,"h":48}
+},
+"catright_02.png":
+{
+	"frame": {"x":92,"y":232,"w":24,"h":20},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":23,"w":24,"h":20},
+	"sourceSize": {"w":32,"h":48}
+},
+"catright_03.png":
+{
+	"frame": {"x":118,"y":231,"w":24,"h":19},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":24,"w":24,"h":19},
+	"sourceSize": {"w":32,"h":48}
+},
 "flyback_01.png":
 {
 	"frame": {"x":754,"y":174,"w":78,"h":78},
@@ -199,6 +295,6 @@
 	"format": "RGBA8888",
 	"size": {"w":834,"h":254},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:2b24f69436122a123aabfc9e20594c16:8d83676b58bffcc5af8c0778baa293fb:dcc9a37c6ee56434469bebcdf2a59d21$"
+	"smartupdate": "$TexturePacker:SmartUpdate:068219398fdf92a17dfff03afcda3063:b91cd9ea97f649865f551b5b05d0d86d:dcc9a37c6ee56434469bebcdf2a59d21$"
 }
 }

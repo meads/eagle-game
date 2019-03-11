@@ -1,4 +1,10 @@
 
+/**
+ * @description Calculate the distance vector between two points and determine if they have collided
+ * @author Mike Eads
+ * @param {Point} a 
+ * @param {Point} b 
+ */
 function hitTest(a, b) {
   let deltaX = a.x - b.x
   let deltaY = a.y - b.y
@@ -8,4 +14,3 @@ function hitTest(a, b) {
   
   return aCollisionRadius + bCollisionRadius > distance
 }
-  

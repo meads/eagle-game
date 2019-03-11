@@ -287,7 +287,9 @@
         eagle = new Eagle(app)
 
         setInterval(() => { 
-            new Cat(app)
+            if (cats.length <= 50) {
+                new Cat(app)
+            }
         }, 1500)
 
         gameState = play
@@ -309,7 +311,7 @@
         eagle.update()
         cats.forEach(c => {
             c.update()
-            if (c instanceof Cat) {
+            if (c instanceof Cat) { // avoid collision detection for FallingCat instances
                 if ( hitTest(eagle.anim, c.anim) ) {
                     cats.splice(cats.indexOf(c), 1)
                     eagle.addItem(c.anim)

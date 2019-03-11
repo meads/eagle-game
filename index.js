@@ -1,14 +1,17 @@
 (function(exports) {
     "use strict"
-    var gameState 
-    var eagle
-    var cats
-    var far
-    var mid
-    var fore
-    var app
-    var sprites = []
+    var gameState = null
+    var gameScene = null
+    var gameOverScene = null
+    var eagle = null
+    var cats = []
+    var far = null
+    var mid = null
+    var fore = null
+    var app = null
+    var explodedCatsCount = 0
     const bottom = 350
+    const maxExplodedCats = 50
 
     function Eagle (app) {
         this.anim = null
@@ -32,7 +35,6 @@
             item.name = this.uuidv4()
             this.items[item.name] = item
             this.container.addChild(item)
-            console.log(this.container.children)
         }
     }
     Eagle.prototype.bindKeyboardControls = function() {
@@ -54,10 +56,10 @@
 
         let spaceBar = keyboard(" ")
         spaceBar.press = () => {
-            let offset = 2
+            let offset = 0
             this.container.children.forEach((val, i, arr) => {
-                offset += 10
-                sprites.push(new FallingCat(this.anim.position.x+offset, this.anim.position.y))
+                offset += 32
+                cats.push(new FallingCat(this.anim.position.x+offset, this.anim.position.y))
             })
             this.container.removeChildren()
         }
@@ -74,9 +76,10 @@
         this.anim.anchor.set(0.5)
         this.anim.animationSpeed = 0.25
         this.anim.play()
+        gameScene.addChild(this.anim)
+        gameScene.addChild(this.container)
 
         return this
-        // app.stage.addChild(this.anim)
     }
     Eagle.prototype.update = function() {
         if (this.direction.up) {
@@ -109,7 +112,7 @@
         }
         // update items we are carrying
         for (let i = 0, vals = Object.values(this.items); i < vals.length; i++) {
-            vals[i].position.y = this.anim.position.y+this.anim.height/5
+            vals[i].position.y = this.anim.position.y+this.anim.height/5 // try to offset the item's y to simulate carrrying with talons
             vals[i].position.x = this.anim.position.x
         }
     }
@@ -129,9 +132,17 @@
         this.anim.anchor.set(0.5)
         this.anim.animationSpeed = 0.25
         this.anim.play()
+        this.add()
 
         return this
-        // app.stage.addChild(this.anim)
+    }
+    Cat.prototype.add = function() {
+        cats.push(this)
+        gameScene.addChild(this.anim)
+    }
+    Cat.prototype.remove = function() {
+        cats.splice(cats.indexOf(this), 1)
+        gameScene.removeChild(this.anim)
     }
     Cat.prototype.update = function() {
         if (this.anim.position.x-5 <= 0) {
@@ -162,11 +173,13 @@
         this.add()
     }
     FallingCat.prototype.add = function() {
-        app.stage.addChild(this.anim)        
+        cats.push(this)
+        gameScene.addChild(this.anim)        
     }
     FallingCat.prototype.remove = function() {
         this.removed = true
-        app.stage.removeChild(this.anim)
+        cats.splice(cats.indexOf(this), 1)
+        gameScene.removeChild(this.anim)
     }
     FallingCat.prototype.update = function() {
         if (this.anim.position.y+5 < bottom) {
@@ -197,14 +210,17 @@
         this.add()
     }
     Explosion.prototype.add = function() {
-        app.stage.addChild(this.anim)
+        gameScene.addChild(this.anim)
         this.timeout = setTimeout(() => {this.remove()}, this.destroyAfter)
     }
     Explosion.prototype.remove = function() {
-        app.stage.removeChild(this.anim)
+        gameScene.removeChild(this.anim)
         clearTimeout(this.timeout)
+        explodedCatsCount++
+        if (explodedCatsCount >= maxExplodedCats) {
+            gameState = end
+        }
     }
-    Explosion.prototype.update = function() {}
 
     // Setup Pixi and load the texture atlas files - call the `setup` function when they've loaded
     PIXI.loader.add("resources/eagledata.json")
@@ -234,15 +250,23 @@
         })
 
         app.stage = new PIXI.Container()
-        document.body.appendChild(app.view)
+        
+        gameScene = new PIXI.Container()
+        app.stage.addChild(gameScene)
+        
+        gameOverScene = new PIXI.Container()
+        gameOverScene.alpha = 0.75
+        app.stage.addChild(gameOverScene)
 
+        document.body.appendChild(app.view)
+        
         var farTexture = PIXI.Texture.fromImage("resources/sky.png")
         far = new PIXI.extras.TilingSprite(farTexture, window.innerWidth, 384)
         far.position.x = 0
         far.position.y = 0
         far.tilePosition.x = 0
         far.tilePosition.y = 0
-        app.stage.addChild(far)
+        gameScene.addChild(far)
         
         var midTexture = PIXI.Texture.fromImage("resources/forest.png")
         mid = new PIXI.extras.TilingSprite(midTexture, window.innerWidth, 384)
@@ -250,7 +274,7 @@
         mid.position.y = 128
         mid.tilePosition.x = 0
         mid.tilePosition.y = 0
-        app.stage.addChild(mid)
+        gameScene.addChild(mid)
 
         var foreTexture = PIXI.Texture.fromImage("resources/platform.png")
         fore = new PIXI.extras.TilingSprite(foreTexture, window.innerWidth, 384)
@@ -258,20 +282,12 @@
         fore.position.y = 160
         fore.tilePosition.x = 0
         fore.tilePosition.y = 0
-        app.stage.addChild(fore)
+        gameScene.addChild(fore)
 
         eagle = new Eagle(app)
-        app.stage.addChild(eagle.anim)
-        app.stage.addChild(eagle.container)
-
-        let cat = new Cat(app)
-        cats = [cat]
-        app.stage.addChild(cat.anim)
 
         setInterval(() => { 
-            let c = new Cat(app)
-            cats.push(c)
-            app.stage.addChild(c.anim)
+            new Cat(app)
         }, 1500)
 
         gameState = play
@@ -293,18 +309,12 @@
         eagle.update()
         cats.forEach(c => {
             c.update()
-            if ( hitTest(eagle.anim, c.anim) ) {
-                // if (eagle.items.length >=3) {
-                    // gameState = end
-                    // return
-                // }
-                cats.splice(cats.indexOf(c), 1)
-                eagle.addItem(c.anim)
+            if (c instanceof Cat) {
+                if ( hitTest(eagle.anim, c.anim) ) {
+                    cats.splice(cats.indexOf(c), 1)
+                    eagle.addItem(c.anim)
+                } 
             }
-        })
-
-        sprites.forEach(c => {
-            c.update()
         })
 
         // parallax scrollng layers
@@ -315,13 +325,23 @@
     
     function end() {
         //All the code that should run at the end of the game
-        app.stage = new PIXI.Container()
-        // let message = new Text("Game over!");
-        // app.stage.addChild(message);
-        // message.position.set(54, 96);
-    }
+        let style = new PIXI.TextStyle({
+            fontFamily: "Arial",
+            fontSize: 36,
+            fill: "white",
+            stroke: '#ff3300',
+            strokeThickness: 4,
+            dropShadow: true,
+            dropShadowColor: "#000000",
+            dropShadowBlur: 4,
+            dropShadowAngle: Math.PI / 6,
+            dropShadowDistance: 6,
+          });
+        let message = new PIXI.Text("Ok you have hurt enough cats!", style);
+        message.position.set(54, 96);
+        gameOverScene.addChild(message);
+        gameOverScene.visible = true
+        gameScene.visible = false
         
-    //The game's helper functions:
-    //`keyboard`, `hitTestRectangle`, `contain` and `randomInt`
-
+    }
 }(window))

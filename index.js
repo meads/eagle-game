@@ -220,6 +220,7 @@
         clearTimeout(this.timeout)
         explodedCatsCount++
         if (explodedCatsCount >= maxExplodedCats) {
+            // trigger game end
             gameState = end
         }
     }
@@ -248,7 +249,8 @@
             height: 384,                       
             antialias: true, 
             transparent: false, 
-            resolution: 1
+            resolution: 1, 
+            backgroundColor : 0x1c1c1c
         })
 
         app.stage = new PIXI.Container()
@@ -290,33 +292,35 @@
 
         eagle = new Eagle(app)
         
-        let style = new PIXI.TextStyle({
+        let messageStyle = new PIXI.TextStyle({
             fontFamily: "Arial",
             fontSize: 36,
-            fill: "white",
-            stroke: '#ff3300',
-            strokeThickness: 4,
+            fill: "#569cd6",
+            stroke: '#569cd6',
+            strokeThickness: 2,
             dropShadow: true,
             dropShadowColor: "#000000",
             dropShadowBlur: 4,
             dropShadowAngle: Math.PI / 6,
             dropShadowDistance: 6,
-          });
-        let message = new PIXI.Text(`
-        Controls:
+        });
         
-        [Arrow keys] - for moving the eagle to pick up items
-        [Space bar]  - for dropping items
-        `, style);
-        message.position.set(54, 96)
+        let message = new PIXI.Text("\nControls:\n\n\t[Arrow keys]\n\t[Space bar]\n\nClick anywhere to play!", messageStyle);
+        message.position.set(window.innerWidth/2-200, 0)
+        let clickArea = new PIXI.Graphics()
+        clickArea.beginFill(0x1c1c1c)
+        clickArea.drawRect(0,0,window.innerWidth, window.innerHeight)
+        clickArea.endFill()
+        clickArea.interactive = true
+        clickArea.on("mousedown", function(e) {
+            
+            gameControlsScene.visible = false
+            gameScene.visible = true
+        })
+        gameControlsScene.addChild(clickArea)
         gameControlsScene.addChild(message)
         gameControlsScene.visible = true
         gameScene.visible = false
-        
-        setTimeout(() => {
-            gameControlsScene.visible = false
-            gameScene.visible = true
-        }, 5000)
 
         setInterval(() => { 
             if (cats.length <= 50) {
@@ -324,6 +328,7 @@
             }
         }, 1500)
 
+        // trigger game play
         gameState = play
 
         app.ticker.add((delta) => gameLoop(delta))
@@ -362,20 +367,32 @@
         let style = new PIXI.TextStyle({
             fontFamily: "Arial",
             fontSize: 36,
-            fill: "white",
-            stroke: '#ff3300',
-            strokeThickness: 4,
+            fill: "#569cd6",
+            stroke: '#569cd6',
+            strokeThickness: 2,
             dropShadow: true,
             dropShadowColor: "#000000",
             dropShadowBlur: 4,
             dropShadowAngle: Math.PI / 6,
             dropShadowDistance: 6,
           });
+
         let message = new PIXI.Text("Ok you have hurt enough cats!", style);
         message.position.set(54, 96);
-        gameOverScene.addChild(message);
+        message.position.set(window.innerWidth/2-200, 0)
+        
+        let clickArea = new PIXI.Graphics()
+        clickArea.beginFill(0x1c1c1c)
+        clickArea.drawRect(0,0,window.innerWidth, window.innerHeight)
+        clickArea.endFill()
+        clickArea.interactive = true
+        clickArea.on("mousedown", function(e) {
+            gameOverScene.visible = false
+            window.location.href = window.location.href
+        })
+        gameOverScene.addChild(clickArea)
+        gameOverScene.addChild(message)
         gameOverScene.visible = true
         gameScene.visible = false
-        
     }
 }(window))

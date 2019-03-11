@@ -11,7 +11,7 @@
     var app = null
     var explodedCatsCount = 0
     const bottom = 350
-    const maxExplodedCats = 50
+    const maxExplodedCats = 6
 
     function Eagle (app) {
         this.anim = null

@@ -58,10 +58,8 @@
 
         let spaceBar = keyboard(" ")
         spaceBar.press = () => {
-            let offset = 0
             this.container.children.forEach((val, i, arr) => {
-                offset += 32
-                cats.push(new FallingCat(this.anim.position.x+offset, this.anim.position.y))
+                cats.push(new FallingCat(this.anim.position.x, this.anim.position.y))
             })
             this.container.removeChildren()
         }

@@ -3,6 +3,8 @@
     var gameState = null
     var gameScene = null
     var gameOverScene = null
+    var gameControlsScene = null
+
     var eagle = null
     var cats = []
     var far = null
@@ -255,7 +257,6 @@
         app.stage.addChild(gameScene)
         
         gameOverScene = new PIXI.Container()
-        gameOverScene.alpha = 0.75
         app.stage.addChild(gameOverScene)
 
         document.body.appendChild(app.view)
@@ -284,7 +285,38 @@
         fore.tilePosition.y = 0
         gameScene.addChild(fore)
 
+        gameControlsScene = new PIXI.Container()
+        app.stage.addChild(gameControlsScene)
+
         eagle = new Eagle(app)
+        
+        let style = new PIXI.TextStyle({
+            fontFamily: "Arial",
+            fontSize: 36,
+            fill: "white",
+            stroke: '#ff3300',
+            strokeThickness: 4,
+            dropShadow: true,
+            dropShadowColor: "#000000",
+            dropShadowBlur: 4,
+            dropShadowAngle: Math.PI / 6,
+            dropShadowDistance: 6,
+          });
+        let message = new PIXI.Text(`
+        Controls:
+        
+        [Arrow keys] - for moving the eagle to pick up items
+        [Space bar]  - for dropping items
+        `, style);
+        message.position.set(54, 96)
+        gameControlsScene.addChild(message)
+        gameControlsScene.visible = true
+        gameScene.visible = false
+        
+        setTimeout(() => {
+            gameControlsScene.visible = false
+            gameScene.visible = true
+        }, 5000)
 
         setInterval(() => { 
             if (cats.length <= 50) {

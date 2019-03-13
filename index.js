@@ -13,7 +13,7 @@
     var app = null
     var explodedCatsCount = 0
     const bottom = 350
-    const maxExplodedCats = 6
+    const maxExplodedCats = 2
 
     function Eagle (app) {
         this.anim = null
@@ -301,17 +301,22 @@
             dropShadowBlur: 4,
             dropShadowAngle: Math.PI / 6,
             dropShadowDistance: 6,
-        });
+        })
         
-        let message = new PIXI.Text("\nControls:\n\n\t[Arrow keys]\n\t[Space bar]\n\nClick anywhere to play!", messageStyle);
+        let message = new PIXI.Text("\nControls:\n\n\t[Arrow keys]\n\t[Space bar]\n\nClick anywhere to play!", messageStyle)
         message.position.set(window.innerWidth/2-200, 0)
+        
         let clickArea = new PIXI.Graphics()
         clickArea.beginFill(0x1c1c1c)
         clickArea.drawRect(0,0,window.innerWidth, window.innerHeight)
         clickArea.endFill()
         clickArea.interactive = true
-        clickArea.on("mousedown", function(e) {
-            
+        clickArea.on("pointerdown", (e) => {
+            setInterval(() => { 
+                if (cats.length <= 50) {
+                    new Cat(app)
+                }
+            }, 1500)
             gameControlsScene.visible = false
             gameScene.visible = true
         })
@@ -320,11 +325,6 @@
         gameControlsScene.visible = true
         gameScene.visible = false
 
-        setInterval(() => { 
-            if (cats.length <= 50) {
-                new Cat(app)
-            }
-        }, 1500)
 
         // trigger game play
         gameState = play
@@ -362,7 +362,7 @@
     
     function end() {
         //All the code that should run at the end of the game
-        let style = new PIXI.TextStyle({
+        let messageStyle = new PIXI.TextStyle({
             fontFamily: "Arial",
             fontSize: 36,
             fill: "#569cd6",
@@ -373,18 +373,17 @@
             dropShadowBlur: 4,
             dropShadowAngle: Math.PI / 6,
             dropShadowDistance: 6,
-          });
+          })
 
-        let message = new PIXI.Text("Ok you have hurt enough cats!", style);
-        message.position.set(54, 96);
-        message.position.set(window.innerWidth/2-200, 0)
-        
+        let message = new PIXI.Text("Ok you have hurt enough cats!", messageStyle)
+        message.position.set(window.innerWidth/2-250, window.innerHeight/3)
+
         let clickArea = new PIXI.Graphics()
         clickArea.beginFill(0x1c1c1c)
         clickArea.drawRect(0,0,window.innerWidth, window.innerHeight)
         clickArea.endFill()
         clickArea.interactive = true
-        clickArea.on("mousedown", function(e) {
+        clickArea.on("pointerdown", (e) => {
             gameOverScene.visible = false
             window.location.href = window.location.href
         })

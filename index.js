@@ -248,7 +248,7 @@
             antialias: true, 
             transparent: false, 
             resolution: 1, 
-            backgroundColor : 0x1c1c1c
+            backgroundColor: 0x1c1c1c
         })
 
         app.stage = new PIXI.Container()
@@ -344,14 +344,18 @@
         // Change the `gameState` to `end` when the game is finished
         // Runs the current `gameState` in a loop and renders the sprites
         eagle.update()
-        cats.forEach(c => {
+        cats.forEach((c, i, arr) => {
             c.update()
-            if (c instanceof Cat) { // avoid collision detection for FallingCat instances
-                if ( hitTest(eagle.anim, c.anim) ) {
+
+            if ( c instanceof Cat ) {
+
+                if ( hitTest(eagle.anim, c.anim) ) {      
                     cats.splice(cats.indexOf(c), 1)
                     eagle.addItem(c.anim)
-                } 
-            }
+                }
+            } 
+
+
         })
 
         // parallax scrollng layers
